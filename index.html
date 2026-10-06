@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#172622">
+  <meta name="description" content="A first playable field prototype for HPL Idle Farm.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%2334543d'/%3E%3Cpath d='M32 51V17M31 27c-10 0-14-6-14-12 9 0 14 4 15 12m0 9c10 0 14-6 14-12-9 0-14 4-15 12' fill='none' stroke='%23e8c66b' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <title>HPL Idle Farm — First Field</title>
+  <style>
+    :root{color-scheme:dark;--ink:#f1ead4;--muted:#a9b1a2;--bg:#101a18;--panel:#1a2924;--edge:#34483c;--green:#87bd70;--gold:#e8c66b;--soil:#67533a;--cream:#f0e7ce;--sky:#263e41}
+    *{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 50% -15%,#355149 0,#162520 50%,#101816 100%);color:var(--ink);font:16px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif;min-height:100vh}
+    button{font:inherit;color:inherit;cursor:pointer}button:focus-visible{outline:3px solid var(--gold);outline-offset:3px}.shell{max-width:1180px;margin:0 auto;padding:20px 24px 36px}
+    header{display:flex;align-items:center;justify-content:space-between;gap:18px;margin-bottom:18px}.brand{display:flex;align-items:center;gap:12px}.brand-mark{display:grid;place-items:center;width:46px;height:46px;border-radius:14px;background:#34543d;border:1px solid #557455;font-size:25px;box-shadow:inset 0 1px #ffffff22}.eyebrow{color:#b6c7a9;font-size:12px;font-weight:800;letter-spacing:.14em;text-transform:uppercase}.brand h1{font-size:21px;line-height:1.1;margin:3px 0 0;letter-spacing:-.03em}.season{background:#20332d;border:1px solid var(--edge);color:#d4dfce;border-radius:999px;padding:9px 14px;font-size:14px;white-space:nowrap}
+    .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}.stat{background:#192722;border:1px solid var(--edge);border-radius:15px;padding:12px 15px;display:flex;justify-content:space-between;align-items:center;gap:10px}.stat-label{font-size:12px;color:var(--muted);font-weight:700;letter-spacing:.06em;text-transform:uppercase}.stat-value{font-size:20px;font-weight:850;color:#f6df91;font-variant-numeric:tabular-nums}.stat small{display:block;color:#9fae9e;font-size:12px;font-weight:500;text-align:right}
+    .layout{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:14px;align-items:start}.world,.side-card{background:linear-gradient(180deg,#20332d,#1a2924);border:1px solid var(--edge);border-radius:20px;box-shadow:0 14px 34px #0002}.world{overflow:hidden}.world-top{display:flex;justify-content:space-between;align-items:center;padding:17px 19px 12px}.world-top h2{font-size:18px;margin:0}.live{display:flex;align-items:center;gap:7px;color:#c3d7bd;font-size:13px}.live i{width:8px;height:8px;border-radius:50%;background:#92d584;box-shadow:0 0 12px #92d58488}
+    .map{position:relative;isolation:isolate;min-height:520px;margin:0 13px 13px;border:1px solid #567153;border-radius:16px;background:linear-gradient(180deg,#85b9a7 0 20%,#b4d2ae 20% 23%,#88ad72 23% 59%,#749c63 59% 100%);overflow:hidden;padding:20px 23px 22px}
+    .skyline{position:absolute;inset:0 0 auto;height:37%;background:linear-gradient(180deg,#9bc8b7,#b2d1a8 75%,#93b87e);z-index:-1}.sun{position:absolute;right:14%;top:9%;width:52px;height:52px;background:#f4d77c;border-radius:50%;box-shadow:0 0 30px #ffe0a266}
+    .hills{position:absolute;left:-8%;right:-8%;top:19%;height:110px;background:#83a96f;clip-path:ellipse(55% 56% at 50% 100%);z-index:-1}.hill2{top:20%;left:38%;background:#739967;clip-path:ellipse(55% 50% at 50% 100%)}
+    .buildings{display:grid;grid-template-columns:1fr 1fr;gap:clamp(36px,10vw,145px);align-items:start;position:relative;z-index:2;max-width:650px;margin:0 auto}.building{position:relative;min-height:110px;border-radius:13px;background:#6f5138;border:3px solid #402f24;box-shadow:0 8px 0 #31482d,0 13px 18px #283b3155;text-align:center;padding:34px 12px 10px}.building:before{content:"";position:absolute;left:7%;right:7%;top:-17px;height:31px;background:#9c6643;border:3px solid #402f24;border-radius:8px 8px 2px 2px;transform:perspective(60px) rotateX(16deg)}.building.barn:after{content:"";position:absolute;width:34px;height:45px;bottom:0;left:calc(50% - 17px);background:#4a382a;border:2px solid #36271f;border-bottom:0;border-radius:15px 15px 0 0}.building.market{background:#836641}.building.market:before{background:#d5a347}.building-title{position:relative;z-index:1;font-weight:850;font-size:17px;text-shadow:0 2px #47372b}.building-meta{position:relative;z-index:1;display:block;color:#f7e7bf;font-size:12px}.store{position:absolute;top:9px;left:50%;transform:translateX(-50%);z-index:3;color:#f5db88;font-size:12px;font-weight:750;white-space:nowrap;text-shadow:0 1px #32251a}
+    .route{position:relative;height:60px;max-width:390px;margin:2px auto 6px;display:flex;align-items:center;justify-content:center}.route:before{content:"";height:0;border-top:2px dashed #f3f2ce;position:absolute;left:5%;right:5%;top:50%;opacity:.8}.route span{position:absolute;top:0;background:#47634b;color:#f0ebce;border:1px solid #9ab181;border-radius:999px;padding:3px 9px;font-size:11px;letter-spacing:.04em}.truck{position:absolute;left:8%;font-size:34px;filter:drop-shadow(0 3px 1px #31432b);z-index:2;transition:left 1.15s cubic-bezier(.23,.65,.25,1)}.truck.delivering{left:84%;transform:scaleX(-1)}.truck.returning{left:8%;transform:scaleX(1)}
+    .field-card{position:relative;margin-top:9px;border:2px solid #59472d;border-radius:14px;background:linear-gradient(180deg,#896a43,#694e34);padding:12px 14px 14px;box-shadow:0 6px 0 #476341;min-height:196px}.field-head{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:8px}.field-title{font-weight:850;font-size:16px}.badge{border-radius:999px;background:#263d2b;border:1px solid #90a66f;color:#d9e8ae;padding:4px 9px;font-size:12px;font-weight:800;white-space:nowrap}.badge.ready{background:#604a20;border-color:#dfbf64;color:#ffeb9f}.field{height:110px;position:relative;border-radius:9px;overflow:hidden;border:2px solid #53402c;background:linear-gradient(180deg,#596b39 0 20%,#6b4c30 20% 100%)}.furrow{position:absolute;inset:27% 0 0;background:repeating-linear-gradient(176deg,transparent 0 13px,#4d3929 14px 17px,#836239 18px 22px)}.crop-row{position:absolute;inset:7px 12px 13px;display:flex;align-items:flex-end;justify-content:space-around}.stalk{font-size:0;transform-origin:bottom;transition:font-size .4s,filter .3s;filter:drop-shadow(0 2px 1px #40361e)}.field.growing .stalk{font-size:20px}.field.ready .stalk{font-size:27px;filter:drop-shadow(0 0 5px #ffe17b)}.worker{position:absolute;left:7%;bottom:6px;z-index:3;font-size:35px;transition:left 2s cubic-bezier(.4,0,.2,1);filter:drop-shadow(0 2px #432d1f)}.worker.walking{left:82%}.worker.returning{left:7%;transform:scaleX(-1)}.field-caption{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:9px;color:#f0e4c4;font-size:13px}.progress{height:6px;border-radius:10px;background:#463a2b;margin-top:7px;overflow:hidden}.progress span{display:block;width:0;height:100%;background:linear-gradient(90deg,#91c96f,#f4d46f);transition:width .45s}
+    .side{display:grid;gap:12px}.side-card{padding:16px}.side-card h3{font-size:15px;margin:0 0 11px}.action{width:100%;border:1px solid #7eaa66;background:linear-gradient(180deg,#6da65c,#477647);border-radius:12px;padding:12px 13px;font-weight:850;color:#f6f2d7;box-shadow:0 3px 0 #304a33;transition:transform .12s,filter .12s}.action:hover:not(:disabled){filter:brightness(1.09);transform:translateY(-1px)}.action:disabled{opacity:.45;cursor:not-allowed;filter:grayscale(.45)}.action.secondary{background:#2a3c32;border-color:#526951;box-shadow:none}.action.gold{background:linear-gradient(180deg,#d6ac4f,#9c7735);border-color:#e6c777;box-shadow:0 3px 0 #604b2c}.hint{color:#b8c5b2;font-size:13px;margin:9px 1px 0}.inventory-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #33473c}.inventory-row:last-child{border-bottom:0}.inventory-row span:first-child{color:#cad5c5}.inventory-row strong{font-variant-numeric:tabular-nums}.upgrade{border:1px solid #40584a;background:#20322b;border-radius:12px;padding:11px;margin-top:8px}.upgrade-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}.upgrade strong{font-size:14px}.upgrade p{color:#aebdaf;font-size:12px;margin:3px 0 9px}.buy{background:transparent;border:1px solid #738d64;border-radius:8px;padding:7px 9px;font-size:12px;font-weight:800;white-space:nowrap}.buy:disabled{opacity:.45;cursor:not-allowed}.note{font-size:12px;color:#9caf9c;margin:12px 2px 0}.toast{position:fixed;bottom:20px;left:50%;transform:translate(-50%,20px);opacity:0;pointer-events:none;background:#f2dfa1;color:#213126;border-radius:999px;padding:10px 16px;font-weight:800;box-shadow:0 8px 22px #0005;transition:.25s;z-index:10}.toast.show{opacity:1;transform:translate(-50%,0)}
+    @media(max-width:820px){.layout{grid-template-columns:1fr}.side{grid-template-columns:1fr 1fr}.side-card:last-child{grid-column:1/-1}.map{min-height:475px}.buildings{gap:54px}.shell{padding:16px}}
+    @media(max-width:560px){.shell{padding:12px}.brand h1{font-size:18px}.season{font-size:12px;padding:8px 10px}.stats{gap:6px}.stat{padding:9px 8px;display:block}.stat-label{font-size:10px}.stat-value{font-size:17px}.stat small{text-align:left;font-size:10px}.map{padding:15px 11px 13px;min-height:435px}.buildings{gap:22px}.building{min-height:89px;padding-top:27px}.building-title{font-size:14px}.building-meta{font-size:10px}.route{height:55px}.field-card{padding:10px;min-height:180px}.field{height:96px}.side{grid-template-columns:1fr}.side-card:last-child{grid-column:auto}.world-top{padding:13px 15px}.world-top h2{font-size:16px}}
+    @media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <header>
+      <div class="brand"><div class="brand-mark" aria-hidden="true">🌾</div><div><div class="eyebrow">HPL Games · Alpha concept</div><h1>Idle Farm</h1></div></div>
+      <div class="season">🌤️ &nbsp; First Field · Day 1</div>
+    </header>
+    <section class="stats" aria-label="Farm totals">
+      <div class="stat"><div><div class="stat-label">Farm Coins</div><div class="stat-value" id="coins">0</div></div><small>earned at market</small></div>
+      <div class="stat"><div><div class="stat-label">Farm Points</div><div class="stat-value" id="points">0</div></div><small>season contribution</small></div>
+      <div class="stat"><div><div class="stat-label">Season pool share</div><div class="stat-value" id="share">—</div></div><small>preview estimate</small></div>
+    </section>
+    <div class="layout">
+      <section class="world" aria-label="Farm field">
+        <div class="world-top"><h2>Your farm</h2><div class="live"><i></i><span id="activity">Waiting for work</span></div></div>
+        <div class="map">
+          <div class="skyline"></div><div class="sun"></div><div class="hills"></div><div class="hills hill2"></div>
+          <div class="buildings">
+            <div class="building barn"><span class="store" id="barnStore">0 / 100 Wheat</span><span class="building-title">BARN</span><span class="building-meta">Storage</span></div>
+            <div class="building market"><span class="building-title">MARKET</span><span class="building-meta">Sells your harvest</span></div>
+          </div>
+          <div class="route"><span>MARKET ROAD · truck route</span><div class="truck" id="truck" aria-label="Delivery truck">🚚</div></div>
+          <div class="field-card">
+            <div class="field-head"><div class="field-title">🌾 Wheat Field <span style="color:#ead7aa;font-weight:600">· Plot 1</span></div><div class="badge" id="cropBadge">Needs planting</div></div>
+            <div class="field" id="field" aria-label="Wheat plot">
+              <div class="furrow"></div><div class="crop-row" id="cropRow"></div><div class="worker" id="worker" aria-hidden="true">🧑‍🌾</div>
+            </div>
+            <div class="progress" aria-label="Field progress"><span id="progress"></span></div>
+            <div class="field-caption"><span id="fieldStatus">Your first plot is ready for work.</span><strong id="fieldCount">0 / 10 wheat</strong></div>
+          </div>
+        </div>
+      </section>
+      <aside class="side">
+        <section class="side-card"><h3>Work the field</h3><button class="action" id="workBtn">Send farmer to plant</button><p class="hint" id="workHint">Tap once to send your farmer across the field. Wheat grows while you wait.</p><button class="action secondary" id="harvestBtn" style="margin-top:9px" disabled>Send collector</button><p class="hint" id="harvestHint">When wheat is ready, send it to the barn by wheelbarrow.</p><button class="action gold" id="truckBtn" style="margin-top:9px" disabled>Send truck to market</button><p class="hint" id="truckHint">Sell stored wheat for Farm Coins.</p></section>
+        <section class="side-card"><h3>Farm inventory</h3><div class="inventory-row"><span>🌾 Wheat in barn</span><strong id="inventory">0</strong></div><div class="inventory-row"><span>🧺 Wheat ready</span><strong id="readyInventory">0</strong></div><div class="inventory-row"><span>🚚 Next load</span><strong id="nextLoad">—</strong></div><p class="note">The harvest only becomes Farm Coins after the truck delivers it.</p></section>
+        <section class="side-card"><h3>Farm upgrades</h3>
+          <div class="upgrade"><div class="upgrade-top"><div><strong>Hire a farmer</strong><p>Plants and tends this field automatically.</p></div><button class="buy" id="buyFarmer">100 coins</button></div></div>
+          <div class="upgrade"><div class="upgrade-top"><div><strong>Hire a collector</strong><p>Automatically wheels ready wheat to the barn.</p></div><button class="buy" id="buyCollector">180 coins</button></div></div>
+          <div class="upgrade"><div class="upgrade-top"><div><strong>Hire a driver</strong><p>Automatically takes barn stock to market.</p></div><button class="buy" id="buyDriver">250 coins</button></div></div>
+          <p class="note">Early version: one crop, one field, three visible jobs to automate.</p>
+        </section>
+      </aside>
+    </div>
+  </main>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script>
+    (()=>{
+      const $=id=>document.getElementById(id);let coins=0,points=0,stored=0,ready=0,stage='idle',busy=false,farmer=false,collector=false,driver=false,toastTimer;
+      const format=n=>Math.floor(n).toLocaleString();
+      function toast(s){$('toast').textContent=s;$('toast').classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').classList.remove('show'),2300)}
+      function update(){
+        $('coins').textContent=format(coins);$('points').textContent=format(points);$('share').textContent=points?`${(points/(points+12000)*100).toFixed(2)}%`:'—';
+        $('barnStore').textContent=`${stored} / 100 Wheat`;$('inventory').textContent=format(stored);$('readyInventory').textContent=format(ready);$('nextLoad').textContent=stored?`${Math.min(50,stored)} wheat`:'—';
+        $('workBtn').disabled=busy||stage==='ready'||stage==='growing';$('harvestBtn').disabled=busy||stage!=='ready';$('truckBtn').disabled=busy||stored===0;
+        $('buyFarmer').disabled=farmer||coins<100;$('buyCollector').disabled=collector||coins<180;$('buyDriver').disabled=driver||coins<250;
+        $('buyFarmer').textContent=farmer?'Hired ✓':'100 coins';$('buyCollector').textContent=collector?'Hired ✓':'180 coins';$('buyDriver').textContent=driver?'Hired ✓':'250 coins';
+      }
+      function setProgress(p){$('progress').style.width=`${p}%`}
+      function setState(next){stage=next;const field=$('field'),badge=$('cropBadge');field.classList.remove('growing','ready');badge.classList.remove('ready');
+        if(next==='idle'){badge.textContent='Needs planting';$('fieldStatus').textContent='Your first plot is ready for work.';$('activity').textContent='Waiting for work';setProgress(0)}
+        if(next==='growing'){field.classList.add('growing');badge.textContent='Growing';$('fieldStatus').textContent='Wheat is growing in the field…';$('activity').textContent='Crop growing';}
+        if(next==='ready'){field.classList.add('ready');badge.classList.add('ready');badge.textContent='Ready to harvest';$('fieldStatus').textContent='The wheat is ready. Send the collector to the field.';$('activity').textContent='Harvest ready';setProgress(100);}
+        update();
+      }
+      function grow(){if(busy||stage==='ready'||stage==='growing')return;busy=true;update();$('activity').textContent='Farmer crossing field';$('fieldStatus').textContent='Farmer is planting and tending the wheat…';$('worker').className='worker walking';setProgress(12);setTimeout(()=>{$('worker').className='worker returning';setTimeout(()=>{busy=false;setState('growing');let start=Date.now(),duration=8500;const timer=setInterval(()=>{const p=Math.min(100,(Date.now()-start)/duration*100);setProgress(p);$('fieldCount').textContent=`${Math.floor(p/10)} / 10 wheat`;if(p>=100){clearInterval(timer);ready=10;for(const el of $('cropRow').children)el.textContent='🌾';setState('ready');update();if(collector)autoCollect()}},180)},850)},700)}
+      function harvest(){if(busy||stage!=='ready')return;busy=true;update();$('fieldStatus').textContent='Collector is wheeling the wheat to the barn…';$('activity').textContent='Collecting harvest';setTimeout(()=>{stored=Math.min(100,stored+ready);ready=0;busy=false;$('fieldCount').textContent='0 / 10 wheat';for(const el of $('cropRow').children)el.textContent='';setState('idle');toast('Wheat stored in the barn. Send the truck to market.');update();if(driver)autoDeliver();if(farmer&&stored<100)setTimeout(grow,500)},1700)}
+      function deliver(){if(busy||stored<1)return;busy=true;let load=Math.min(50,stored);$('nextLoad').textContent=`Loading ${load}…`;$('activity').textContent='Truck loading';update();setTimeout(()=>{$('truck').className='truck delivering';$('activity').textContent='On the way to market';setTimeout(()=>{$('truck').className='truck returning';stored-=load;let earned=load*10;coins+=earned;points+=load*2;$('activity').textContent='Sold at market';$('fieldStatus').textContent=`Market sold ${load} wheat for ${format(earned)} Farm Coins.`;busy=false;toast(`Market sale: +${format(earned)} Farm Coins`);update();if(driver&&stored>0)setTimeout(deliver,700)},1400)},800)}
+      function autoCollect(){if(collector&&stage==='ready')setTimeout(harvest,500)}function autoDeliver(){if(driver&&stored) setTimeout(deliver,450)}
+      $('workBtn').addEventListener('click',grow);$('harvestBtn').addEventListener('click',harvest);$('truckBtn').addEventListener('click',deliver);
+      $('buyFarmer').addEventListener('click',()=>{if(coins<100||farmer)return;coins-=100;farmer=true;toast('Farmer hired! New crops now start automatically.');update();if(stage==='idle')setTimeout(grow,500)});
+      $('buyCollector').addEventListener('click',()=>{if(coins<180||collector)return;coins-=180;collector=true;toast('Collector hired! Ready wheat goes to the barn automatically.');update();if(stage==='ready')autoCollect()});
+      $('buyDriver').addEventListener('click',()=>{if(coins<250||driver)return;coins-=250;driver=true;toast('Driver hired! Barn loads head to market automatically.');update();if(stored)autoDeliver()});
+      for(let i=0;i<9;i++){const s=document.createElement('span');s.className='stalk';s.textContent='🌱';$('cropRow').appendChild(s)}update();
+    })();
+  </script>
+</body>
+</html>
