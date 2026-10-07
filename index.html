@@ -155,7 +155,7 @@
       function setPlotState(kind,next){
         const wheat=kind==='wheat',ids=wheat?{field:'field',badge:'cropBadge',action:'fieldAction',status:'fieldStatus',count:'fieldCount',progress:'progress'}:{field:'carrotField',badge:'carrotBadge',action:'carrotAction',status:'carrotStatus',count:'carrotCount',progress:'carrotProgress'},field=$(ids.field),badge=$(ids.badge),cropName=wheat?'wheat':'carrots';
         if(wheat)stage=next;else carrotStage=next;field.classList.remove('growing','ready');badge.classList.remove('ready');
-        if(next==='idle'){badge.textContent='Needs planting';$(ids.action).textContent='TAP FIELD TO PLANT';$(ids.status).textContent=`Tap to plant ${cropName}.`;$(ids.count).textContent=`0 / 10 ${cropName}`;setProgress(ids.progress,0);if(wheat)$('activity').textContent='Waiting for work'}
+        if(next==='idle'){badge.textContent='Needs planting';$(ids.action).textContent='TAP FIELD TO PLANT';$(ids.status).textContent=`Tap to plant ${cropName}.`;$(ids.count).textContent=`0 / ${cropYield(kind)} ${cropName}`;setProgress(ids.progress,0);if(wheat)$('activity').textContent='Waiting for work'}
         if(next==='growing'){field.classList.add('growing');badge.textContent='Growing';$(ids.action).textContent=wheat?'WHEAT IS GROWING':'CARROTS ARE GROWING';$(ids.status).textContent=`Your ${cropName} are growing…`;}
         if(next==='ready'){field.classList.add('ready');badge.classList.add('ready');badge.textContent='Ready to harvest';$(ids.action).textContent='TAP FIELD TO HARVEST';$(ids.status).textContent=`Tap to harvest ${cropName} into the field crate.`;setProgress(ids.progress,100)}
         update();
@@ -169,8 +169,8 @@
       function growPlot(kind){
         const wheat=kind==='wheat',current=wheat?stage:carrotStage,busy=wheat?wheatWorkerBusy:carrotWorkerBusy;
         if(busy||current!=='idle')return;const p=plots[kind],row=$(wheat?'cropRow':'carrotCropRow'),count=$(wheat?'fieldCount':'carrotCount'),progressId=wheat?'progress':'carrotProgress',crop=wheat?'🌾':'🥕',name=wheat?'wheat':'carrots';
-        setProgress(progressId,0);count.textContent=`0 / 10 ${name}`;for(const el of row.children)el.textContent='🌱';
-        animateField(kind,()=>{setPlotState(kind,'growing');let growth=0,last=Date.now();const timer=setInterval(()=>{const now=Date.now(),delta=now-last;last=now;const farmerSpeed=1+(p.farmers-1)*.25,managerSpeed=perkActive(kind,'speed')?2:1;growth+=delta*farmerSpeed*managerSpeed;const progress=Math.min(100,growth/7000*100);setProgress(progressId,progress);count.textContent=`${Math.floor(progress/10)} / 10 ${name}`;if(progress>=100){clearInterval(timer);if(wheat)ready=10;else carrotReady=10;for(const el of row.children)el.textContent=crop;setPlotState(kind,'ready');if(p.manager)setTimeout(()=>managerStep(kind),300)}},160)},`Farmer is walking the ${name} plot to plant…`,`Planting ${name}`);
+        setProgress(progressId,0);count.textContent=`0 / ${cropYield(kind)} ${name}`;for(const el of row.children)el.textContent='🌱';
+        animateField(kind,()=>{setPlotState(kind,'growing');let growth=0,last=Date.now();const timer=setInterval(()=>{const now=Date.now(),delta=now-last;last=now;const farmerSpeed=1+(p.farmers-1)*.25,managerSpeed=perkActive(kind,'speed')?2:1;growth+=delta*farmerSpeed*managerSpeed;const progress=Math.min(100,growth/7000*100),targetYield=cropYield(kind);setProgress(progressId,progress);count.textContent=`${Math.floor(targetYield*progress/100)} / ${targetYield} ${name}`;if(progress>=100){clearInterval(timer);if(wheat)ready=10;else carrotReady=10;for(const el of row.children)el.textContent=crop;setPlotState(kind,'ready');if(p.manager)setTimeout(()=>managerStep(kind),300)}},160)},`Farmer is walking the ${name} plot to plant…`,`Planting ${name}`);
       }
       function plantWheat(){growPlot('wheat')}
       function plantCarrots(){if(carrotUnlocked)growPlot('carrot')}
